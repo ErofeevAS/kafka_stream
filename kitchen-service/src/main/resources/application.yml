@@ -1,0 +1,22 @@
+spring:
+  kafka:
+
+    bootstrap-servers:
+      - localhost:9092
+    template:
+      default-topic: test-order
+    consumer:
+      group-id: test
+      properties:
+        value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: "eu.senla.event.model"
+
+
+
+server:
+  port: 8089
+
+logging:
+  level:
+    eu.senla: DEBUG
+    org.apache.activemq.artemis: DEBUG

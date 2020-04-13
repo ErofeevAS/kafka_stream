@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS orders;
+
+CREATE TABLE orders (
+  id INT AUTO_INCREMENT  PRIMARY KEY,
+  price DECIMAL(20, 2),
+  status VARCHAR(250) DEFAULT "NEW",
+  user_id INT DEFAULT NULL
+);

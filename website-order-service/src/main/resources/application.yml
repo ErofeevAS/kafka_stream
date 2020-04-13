@@ -1,0 +1,33 @@
+
+spring:
+#  profiles: local
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+
+  kafka:
+    bootstrap-servers:
+    - localhost:9092
+    template:
+      default-topic: test-order
+
+    producer:
+      properties:
+        value.serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+
+
+logging:
+  level:
+    eu.senla: DEBUG
+    org.apache.activemq.artemis: DEBUG
+server:
+  port: 8087
