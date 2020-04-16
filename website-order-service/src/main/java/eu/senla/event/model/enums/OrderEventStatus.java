@@ -4,5 +4,6 @@ public enum OrderEventStatus {
     NEW,
     PENDING,
     COMPLETED,
-    DELIVERED
+    DELIVERED,
+    UPDATED
 }

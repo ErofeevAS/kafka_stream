@@ -1,31 +1,52 @@
 package eu.senla.controller;
 
 import eu.senla.event.model.OrderEvent;
-import eu.senla.service.OrderMessagingService;
+import eu.senla.event.model.enums.OrderEventStatus;
 import eu.senla.repository.model.Order;
+import eu.senla.service.OrderAggregateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 
 @RestController
-@RequestMapping(value = "/orders")
+@RequestMapping(value = "orders")
 public class OrderController {
 
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
-    private final OrderMessagingService orderMessagingService;
+    private final OrderAggregateService orderAggregateService;
 
-    public OrderController(OrderMessagingService orderMessagingService) {
-        this.orderMessagingService = orderMessagingService;
+    public OrderController(OrderAggregateService orderAggregateService) {
+        this.orderAggregateService = orderAggregateService;
     }
 
     @PostMapping
-    public void sendOrder(@RequestBody @Valid OrderEvent orderEvent) {
-        log.debug("order will be recieved :{}", orderEvent);
-        orderMessagingService.sendOrder(orderEvent);
+    public Order createOrder(@RequestBody @Valid OrderEvent orderEvent) {
+        log.debug("order will be received :{}", orderEvent);
+        OrderEvent savedOrder = orderAggregateService.saveAndNotify(orderEvent);
+        return savedOrder.getValue();
     }
+
+    @PutMapping(value = "/{id}")
+    public void updateOrder(@RequestBody OrderEvent orderEvent, @PathVariable Long id) {
+        orderAggregateService.updateAndNotify(id, orderEvent);
+    }
+
+    @GetMapping(value = "test")
+    public Order testCreationOrder() {
+        Order order = new Order();
+        order.setPrice(new BigDecimal(22));
+        order.setUser_id(123L);
+        OrderEvent orderEvent = OrderEvent.builder()
+                .value(order)
+                .status(OrderEventStatus.NEW)
+                .build();
+        log.debug("order will be received :{}", orderEvent);
+        OrderEvent savedOrder = orderAggregateService.saveAndNotify(orderEvent);
+        return savedOrder.getValue();
+    }
+
+
 }

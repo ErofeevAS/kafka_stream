@@ -1,4 +1,4 @@
-package eu.senla.kitchenservice.service.model;
+package eu.senla.service.model;
 
 import eu.senla.repository.model.Order;
 import eu.senla.repository.model.enums.OrderStatus;
@@ -22,7 +22,7 @@ public class Cooking implements Callable<Order> {
     @Override
     public Order call() throws Exception {
         log.debug(" order with id: {} is cooking", order.getId());
-        Thread.sleep(1000 + random.nextInt(1000));
+        Thread.sleep(200 + random.nextInt(5000));
         order.setStatus(OrderStatus.COMPLETED);
         log.debug(" order with id: {} finished", order.getId());
         return order;

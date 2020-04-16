@@ -1,4 +1,4 @@
-package eu.senla.kitchenservice.service.model;
+package eu.senla.service.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

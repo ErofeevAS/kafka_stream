@@ -1,7 +1,7 @@
-package eu.senla.kitchenservice.event.sink;
+package eu.senla.service;
 
 import eu.senla.event.model.OrderEvent;
 
-public interface JmsOrderReceiver {
+public interface KitchenAggregateService {
     void receiveOrder(OrderEvent orderEvent) throws InterruptedException;
 }

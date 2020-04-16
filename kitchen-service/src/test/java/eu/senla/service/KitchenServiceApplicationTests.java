@@ -1,4 +1,4 @@
-package eu.senla.kitchenservice;
+package eu.senla.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,6 +1,21 @@
+server:
+  port: 8087
 
 spring:
-#  profiles: local
+  application:
+    name: order-service
+  #  profiles: local
+  zipkin:
+    sender:
+      type: kafka
+  sleuth:
+
+#    trace-id128: true
+    sampler:
+      probability: 1.0
+
+
+
   h2:
     console:
       enabled: true
@@ -20,14 +35,17 @@ spring:
     producer:
       properties:
         value.serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: test
+      properties:
+        value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: "eu.senla.event.model"
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-
-
 
 logging:
   level:
     eu.senla: DEBUG
-    org.apache.activemq.artemis: DEBUG
-server:
-  port: 8087
+    org.springframework.web : debug
+#  pattern:
+#    level: "[%X{traceId}/%X{spanId}] %-5p [%t] %C{2} - %m%n"

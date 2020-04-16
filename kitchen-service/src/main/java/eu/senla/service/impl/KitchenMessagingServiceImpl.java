@@ -1,8 +1,7 @@
 package eu.senla.service.impl;
 
-import eu.senla.controller.OrderController;
 import eu.senla.event.model.OrderEvent;
-import eu.senla.service.OrderMessagingService;
+import eu.senla.service.KitchenMessagingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -11,19 +10,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 
 @Service
-public class OrderMessagingServiceImpl implements OrderMessagingService {
-    private static final Logger log = LoggerFactory.getLogger(OrderMessagingServiceImpl.class);
+public class KitchenMessagingServiceImpl implements KitchenMessagingService {
+    private static final Logger log = LoggerFactory.getLogger(KitchenMessagingServiceImpl.class);
     private final KafkaTemplate<String, OrderEvent> kafkaTemplate;
+    private static final String DEFAULT_ORDER_KITCHEN_TOPIC = "order-kitchen";
 
-    public OrderMessagingServiceImpl(KafkaTemplate<String, OrderEvent> kafkaTemplate) {
+    public KitchenMessagingServiceImpl(KafkaTemplate<String, OrderEvent> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
-
 
     @Override
     public void notify(OrderEvent orderEvent, String topicName) {
         ListenableFuture<SendResult<String, OrderEvent>> result = kafkaTemplate.send(topicName, orderEvent);
-//        log.debug("order was send to the kitchen");
+        log.debug("order was send from the kitchen");
     }
 
+    @Override
+    public void notify(OrderEvent orderEvent) {
+        this.notify(orderEvent, DEFAULT_ORDER_KITCHEN_TOPIC);
+    }
 }
